@@ -37,11 +37,13 @@ var (
 
 	periodicTasksDefine = map[string]PeriodicTask{
 		refreshTsMetric: {
-			Cron:    "*/2 * * * *",
+			// Cron:    "*/2 * * * *",
+			Cron:    "* */2 * * *",
 			Handler: metadataTask.RefreshTimeSeriesMetric,
 		},
 		refreshEventDimension: {
-			Cron:    "*/3 * * * *",
+			// Cron:    "*/3 * * * *",
+			Cron:    "* */2 * * *",
 			Handler: metadataTask.RefreshEventDimension,
 		},
 		refreshEsStorage: {
@@ -49,11 +51,13 @@ var (
 			Handler: metadataTask.RefreshESStorage,
 		},
 		refreshInfluxdbRoute: {
-			Cron:    "*/10 * * * *",
+			// Cron:    "*/10 * * * *",
+			Cron:    "* */2 * * *",
 			Handler: metadataTask.RefreshInfluxdbRoute,
 		},
 		refreshDatasource: {
-			Cron:    "*/10 * * * *",
+			// Cron:    "*/10 * * * *",
+			Cron:    "* */2 * * *",
 			Handler: metadataTask.RefreshDatasource,
 		},
 		//DiscoverBcsClusters: {
@@ -61,7 +65,8 @@ var (
 		//	Handler: metadataTask.DiscoverBcsClusters,
 		//},
 		RefreshBcsMonitorInfo: {
-			Cron:    "*/10 * * * *",
+			// Cron:    "*/10 * * * *",
+			Cron:    "* */2 * * *",
 			Handler: metadataTask.RefreshBcsMonitorInfo,
 		},
 	}
