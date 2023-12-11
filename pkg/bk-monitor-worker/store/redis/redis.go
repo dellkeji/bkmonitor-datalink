@@ -45,21 +45,23 @@ func GetInstance(ctx context.Context) *Instance {
 	var client goRedis.UniversalClient
 	var err error
 
+	redisConfig := config.GlobalConfig.Store.RedisConfig
+
 	err = retry.Do(
 		func() error {
 			client, err = redisUtils.NewRedisClient(
 				ctx,
 				&redisUtils.Option{
-					Mode:             config.StorageRedisMode,
-					Host:             config.StorageRedisStandaloneHost,
-					Port:             config.StorageRedisStandalonePort,
-					SentinelAddress:  config.StorageRedisSentinelAddress,
-					MasterName:       config.StorageRedisSentinelMasterName,
-					SentinelPassword: config.StorageRedisSentinelPassword,
-					Password:         config.StorageRedisStandalonePassword,
-					Db:               config.StorageRedisDatabase,
-					DialTimeout:      config.StorageRedisDialTimeout,
-					ReadTimeout:      config.StorageRedisReadTimeout,
+					Mode:             redisConfig.Mode,
+					Host:             redisConfig.Standalone.Host,
+					Port:             redisConfig.Standalone.Port,
+					SentinelAddress:  redisConfig.Sentinel.Address,
+					MasterName:       redisConfig.Sentinel.MasterName,
+					SentinelPassword: redisConfig.Sentinel.Password,
+					Password:         redisConfig.Standalone.Password,
+					Db:               redisConfig.DB,
+					DialTimeout:      redisConfig.DialTimeout,
+					ReadTimeout:      redisConfig.ReadTimeout,
 				},
 			)
 			if err != nil {

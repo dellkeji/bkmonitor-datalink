@@ -17,11 +17,11 @@ import (
 // InitLogger logger initial
 func InitLogger() {
 	logger.SetOptions(logger.Options{
-		Stdout:     config.LoggerEnabledStdout,
-		Level:      config.LoggerLevel,
-		Filename:   config.Path,
-		MaxSize:    config.MaxSize,
-		MaxAge:     config.MaxAge,
-		MaxBackups: config.MaxBackups,
+		Stdout:     config.GlobalConfig.Log.EnableStdout,
+		Level:      config.GlobalConfig.Log.Level,
+		Filename:   config.GlobalConfig.Log.Path,
+		MaxSize:    config.GlobalConfig.Log.MaxSize,
+		MaxAge:     config.GlobalConfig.Log.MaxAge,
+		MaxBackups: config.GlobalConfig.Log.MaxBackups,
 	})
 }

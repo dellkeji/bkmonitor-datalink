@@ -54,21 +54,23 @@ func GetRDB() *RDB {
 	var client redis.UniversalClient
 	var err error
 
+	redisConfig := config.GlobalConfig.Broker.RedisConfig
+
 	err = retry.Do(
 		func() error {
 			client, err = redisUtils.NewRedisClient(
 				context.Background(),
 				&redisUtils.Option{
-					Mode:             config.BrokerRedisMode,
-					Host:             config.BrokerRedisStandaloneHost,
-					Port:             config.BrokerRedisStandalonePort,
-					Password:         config.BrokerRedisStandalonePassword,
-					SentinelAddress:  config.BrokerRedisSentinelAddress,
-					MasterName:       config.BrokerRedisSentinelMasterName,
-					SentinelPassword: config.BrokerRedisSentinelPassword,
-					Db:               config.BrokerRedisDatabase,
-					DialTimeout:      config.BrokerRedisDialTimeout,
-					ReadTimeout:      config.BrokerRedisReadTimeout,
+					Mode:             redisConfig.Mode,
+					Host:             redisConfig.Standalone.Host,
+					Port:             redisConfig.Standalone.Port,
+					Password:         redisConfig.Standalone.Password,
+					SentinelAddress:  redisConfig.Sentinel.Address,
+					MasterName:       redisConfig.Sentinel.MasterName,
+					SentinelPassword: redisConfig.Sentinel.Password,
+					Db:               redisConfig.DB,
+					DialTimeout:      redisConfig.DialTimeout,
+					ReadTimeout:      redisConfig.ReadTimeout,
 				},
 			)
 			if err != nil {

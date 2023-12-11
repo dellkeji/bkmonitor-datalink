@@ -23,6 +23,7 @@ import (
 
 func Initial(parentCtx context.Context) (PreCalculateProcessor, error) {
 	ctx, cancel := context.WithCancel(parentCtx)
+	redisConfig := config.GlobalConfig.Store.RedisConfig
 	return NewPrecalculate().
 		WithContext(ctx, cancel).
 		WithNotifierConfig(
@@ -50,16 +51,16 @@ func Initial(parentCtx context.Context) (PreCalculateProcessor, error) {
 			storage.SaveHoldDuration(config.StorageSaveHoldMaxDuration),
 			storage.CacheBackend(storage.CacheTypeRedis),
 			storage.CacheRedisConfig(
-				storage.RedisCacheMode(config.StorageRedisMode),
-				storage.RedisCacheHost(config.StorageRedisStandaloneHost),
-				storage.RedisCachePort(config.StorageRedisStandalonePort),
-				storage.RedisCacheSentinelAddress(config.StorageRedisSentinelAddress...),
-				storage.RedisCacheMasterName(config.StorageRedisSentinelMasterName),
-				storage.RedisCacheSentinelPassword(config.StorageRedisSentinelPassword),
-				storage.RedisCachePassword(config.StorageRedisStandalonePassword),
-				storage.RedisCacheDb(config.StorageRedisDatabase),
-				storage.RedisCacheDialTimeout(config.StorageRedisDialTimeout),
-				storage.RedisCacheReadTimeout(config.StorageRedisReadTimeout),
+				storage.RedisCacheMode(redisConfig.Mode),
+				storage.RedisCacheHost(redisConfig.Standalone.Host),
+				storage.RedisCachePort(redisConfig.Standalone.Port),
+				storage.RedisCacheSentinelAddress(redisConfig.Sentinel.Address...),
+				storage.RedisCacheMasterName(redisConfig.Sentinel.MasterName),
+				storage.RedisCacheSentinelPassword(redisConfig.Sentinel.Password),
+				storage.RedisCachePassword(redisConfig.Standalone.Password),
+				storage.RedisCacheDb(redisConfig.DB),
+				storage.RedisCacheDialTimeout(redisConfig.DialTimeout),
+				storage.RedisCacheReadTimeout(redisConfig.ReadTimeout),
 			),
 			storage.BloomConfig(
 				storage.BloomFpRate(config.StorageBloomFpRate),
