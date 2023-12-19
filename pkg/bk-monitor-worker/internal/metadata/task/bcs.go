@@ -128,7 +128,7 @@ func updateBcsCluster(cluster service.BcsClusterInfo, bcsClusterInfo *bcs.BCSClu
 		updateFields = append(updateFields, bcs.BCSClusterInfoDBSchema.Status)
 	}
 	// 如果 BCS Token 变了需要刷新
-	apiKeyContent := cfg.BkApiBcsApiGatewayToken
+	apiKeyContent := cfg.GlobalConfig.Task.Common.BkApi.BcsApiGatewayToken
 	if bcsClusterInfo.ApiKeyContent != apiKeyContent {
 		bcsClusterInfo.ApiKeyContent = apiKeyContent
 		updateFields = append(updateFields, bcs.BCSClusterInfoDBSchema.ApiKeyContent)

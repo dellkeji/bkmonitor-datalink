@@ -144,8 +144,8 @@ taskConfig:
       enableBcsGray: false
       clusterBkEnvLabel: ""
       kafkaStorageClusterId: 0
-      influxdb_default_proxy_cluster_name_for_k8s: "default"
-      custom_event_storage_cluster_id: 0
+      influxdbDefaultProxyClusterNameForK: "default"
+      customEventStorageClusterId: 0
   # apmPreCalculate: apm预计算配置
   apmPreCalculate:
     notifier:

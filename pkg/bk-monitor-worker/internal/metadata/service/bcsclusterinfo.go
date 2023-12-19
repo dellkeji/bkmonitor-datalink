@@ -131,11 +131,12 @@ func (b BcsClusterInfoSvc) FetchK8sClusterList() ([]BcsClusterInfo, error) {
 
 // IsClusterIdInGray 判断cluster id是否在灰度配置中
 func (BcsClusterInfoSvc) IsClusterIdInGray(clusterId string) bool {
+	bcsConfig := cfg.GlobalConfig.Task.Metadata.BcsConfig
 	// 未启用灰度配置，全返回true
-	if !cfg.BcsEnableBcsGray {
+	if !bcsConfig.EnableBcsGray {
 		return true
 	}
-	grayBcsClusterList := cfg.BcsGrayClusterIdList
+	grayBcsClusterList := bcsConfig.GrayClusterIdList
 
 	for _, id := range grayBcsClusterList {
 		if id == clusterId {
@@ -278,7 +279,8 @@ func (BcsClusterInfoSvc) fetchBcsStorage(clusterId, field, sourceType string) ([
 	client := &http.Client{
 		Timeout: 5 * time.Second,
 	}
-	target, err := url.Parse(fmt.Sprintf(urlTemplate, strings.TrimRight(cfg.BkApiBcsApiGatewayDomain, "/"), clusterId, sourceType, field))
+	bcsConfig :=  cfg.GlobalConfig.Task.Common.BkApi
+	target, err := url.Parse(fmt.Sprintf(urlTemplate, strings.TrimRight(bcsConfig.BcsApiGatewayDomain, "/"), clusterId, sourceType, field))
 	if err != nil {
 		return nil, err
 	}
@@ -287,7 +289,7 @@ func (BcsClusterInfoSvc) fetchBcsStorage(clusterId, field, sourceType string) ([
 		return nil, err
 	}
 	req.Header.Set("Content-type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", cfg.BkApiBcsApiGatewayToken))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bcsConfig.BcsApiGatewayToken))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -359,7 +361,8 @@ func (b BcsClusterInfoSvc) RegisterCluster(bkBizId, clusterId, projectId, creato
 			fmt.Sprintf("failed to register cluster_id [%s] under project_id [%s] for cluster is already register, nothing will do any more", clusterId, projectId),
 		)
 	}
-	bcsUrl, err := url.ParseRequestURI(cfg.BkApiBcsApiGatewayDomain)
+	bkapiConfig := cfg.GlobalConfig.Task.Common.BkApi
+	bcsUrl, err := url.ParseRequestURI(bkapiConfig.BcsApiGatewayDomain)
 	if err != nil {
 		return nil, err
 	}
@@ -369,7 +372,8 @@ func (b BcsClusterInfoSvc) RegisterCluster(bkBizId, clusterId, projectId, creato
 		port = 443
 	}
 
-	bkEnv := cfg.BcsClusterBkEnvLabel
+	bcsConfig := cfg.GlobalConfig.Task.Metadata.BcsConfig
+	bkEnv := bcsConfig.ClusterBkEnvLabel
 	cluster := bcs.BCSClusterInfo{
 		ClusterID:         clusterId,
 		BCSApiClusterId:   clusterId,
@@ -379,7 +383,7 @@ func (b BcsClusterInfoSvc) RegisterCluster(bkBizId, clusterId, projectId, creato
 		Port:              uint(port),
 		ServerAddressPath: "clusters",
 		ApiKeyType:        "authorization",
-		ApiKeyContent:     cfg.BkApiBcsApiGatewayToken,
+		ApiKeyContent:     bkapiConfig.BcsApiGatewayToken,
 		ApiKeyPrefix:      "Bearer",
 		Status:            models.BcsClusterStatusRunning,
 		IsSkipSslVerify:   true,
@@ -394,7 +398,7 @@ func (b BcsClusterInfoSvc) RegisterCluster(bkBizId, clusterId, projectId, creato
 	// 注册6个必要的data_id和自定义事件及自定义时序上报内容
 	for usage, register := range bcsDatasourceRegisterInfo {
 		// 注册data_id
-		datasource, err := NewBcsClusterInfoSvc(&cluster).CreateDataSource(usage, register.EtlConfig, creator, cfg.BcsKafkaStorageClusterId, "default")
+		datasource, err := NewBcsClusterInfoSvc(&cluster).CreateDataSource(usage, register.EtlConfig, creator, cfg.GlobalConfig.Task.Metadata.BcsConfig.KafkaStorageClusterId, "default")
 		if err != nil {
 			return nil, err
 		}
@@ -404,10 +408,10 @@ func (b BcsClusterInfoSvc) RegisterCluster(bkBizId, clusterId, projectId, creato
 		var additionalOptions map[string][]string
 		if register.Usage == "metric" {
 			// 如果是指标的类型，需要考虑增加influxdb proxy的集群隔离配置
-			defaultStorageConfig = map[string]interface{}{"proxy_cluster_name": cfg.BcsInfluxdbDefaultProxyClusterNameForK8s}
+			defaultStorageConfig = map[string]interface{}{"proxy_cluster_name": cfg.GlobalConfig.Task.Metadata.BcsConfig.InfluxdbDefaultProxyClusterNameForK8s}
 			additionalOptions = map[string][]string{models.OptionCustomReportDimensionValues: bcs.DefaultServiceMonitorDimensionTerm}
 		} else {
-			defaultStorageConfig = map[string]interface{}{"cluster_id": cfg.BcsCustomEventStorageClusterId}
+			defaultStorageConfig = map[string]interface{}{"cluster_id": cfg.GlobalConfig.Task.Metadata.BcsConfig.CustomEventStorageClusterId}
 			additionalOptions = map[string][]string{}
 		}
 		var bkDataId uint
@@ -489,7 +493,7 @@ func (b BcsClusterInfoSvc) CreateDataSource(usage, etlConfig, operator string, m
 		mqClusterId,
 		typeLabelDict[etlConfig],
 		transferClusterId,
-		cfg.BkApiAppCode,
+		cfg.GlobalConfig.Task.Common.BkApi.AppCode,
 	)
 	if err != nil {
 		return nil, err
@@ -661,7 +665,7 @@ func (b BcsClusterInfoSvc) GetK8sClientConfig() (*rest.Config, error) {
 		return nil, errors.New("BCSClusterInfo obj can not be nil")
 	}
 
-	parsedUrl, err := url.Parse(cfg.BkApiBcsApiGatewayDomain)
+	parsedUrl, err := url.Parse(cfg.GlobalConfig.Task.Common.BkApi.BcsApiGatewayDomain)
 	if err != nil {
 		return nil, err
 	}
@@ -831,7 +835,7 @@ func (b BcsClusterInfoSvc) bkEnvLabel() string {
 	if b.BkEnv != nil {
 		return *b.BkEnv
 	}
-	return cfg.BcsClusterBkEnvLabel
+	return cfg.GlobalConfig.Task.Metadata.BcsConfig.ClusterBkEnvLabel
 }
 
 // RefreshCommonResource 刷新内置公共dataid资源信息，追加部署的资源，更新未同步的资源

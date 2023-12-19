@@ -47,23 +47,23 @@ func GetDBSession() *DBSession {
 // Open connect the mysql db
 func (db *DBSession) Open() error {
 	var err error
-
-	dbhost := fmt.Sprintf("tcp(%s:%d)", config.StorageMysqlHost, config.StorageMysqlPort)
+	mysqlConfig := config.GlobalConfig.Store.MysqlConfig
+	dbhost := fmt.Sprintf("tcp(%s:%d)", mysqlConfig.Host, mysqlConfig.Port)
 	db.DB, err = gorm.Open("mysql", fmt.Sprintf(
 		"%s:%s@%s/%s?charset=%s&parseTime=True&loc=Local",
-		config.StorageMysqlUser,
-		config.StorageMysqlPassword,
+		mysqlConfig.User,
+		mysqlConfig.Password,
 		dbhost,
-		config.StorageMysqlDbName,
-		config.StorageMysqlCharset,
+		mysqlConfig.DbName,
+		mysqlConfig.Charset,
 	))
 	if err != nil {
 		logger.Errorf("new a mysql connection error, %v", err)
 		return err
 	}
 	sqldb := db.DB.DB()
-	sqldb.SetMaxIdleConns(config.StorageMysqlMaxIdleConnections)
-	sqldb.SetMaxOpenConns(config.StorageMysqlMaxOpenConnections)
+	sqldb.SetMaxIdleConns(mysqlConfig.MaxIdleConnections)
+	sqldb.SetMaxOpenConns(mysqlConfig.MaxOpenConnections)
 
 	// 判断连通性
 	if err := sqldb.Ping(); err != nil {
@@ -71,7 +71,7 @@ func (db *DBSession) Open() error {
 	}
 
 	// 是否开启 debug 模式
-	if config.StorageMysqlDebug {
+	if mysqlConfig.Debug {
 		logger.Info("Debug mode of mysql is enabled. Check if it is in the test environment!")
 		db.DB.LogMode(true)
 	}

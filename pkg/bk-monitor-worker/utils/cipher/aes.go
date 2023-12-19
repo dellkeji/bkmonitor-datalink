@@ -46,7 +46,7 @@ func AESDecrypt(encryptedPwd string) string {
 	}
 	// 获取iv
 	iv := base64Decoded[:aes.BlockSize]
-	key := sha256.Sum256([]byte(config.AesKey))
+	key := sha256.Sum256([]byte(config.GlobalConfig.Aes.Key))
 	block, err := aes.NewCipher(key[:])
 	if err != nil {
 		logger.Errorf("new cipher error, %s", err)

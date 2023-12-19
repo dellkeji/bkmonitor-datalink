@@ -23,8 +23,8 @@ import (
 )
 
 var (
-	StoragePeriodicTaskKey        = fmt.Sprintf("%s:periodicTask", config.StorageRedisKeyPrefix)
-	StoragePeriodicTaskChannelKey = fmt.Sprintf("%s:channel:periodicTask", config.StorageRedisKeyPrefix)
+	StoragePeriodicTaskKey        = fmt.Sprintf("%s:periodicTask", config.GlobalConfig.Store.RedisConfig.KeyPrefix)
+	StoragePeriodicTaskChannelKey = fmt.Sprintf("%s:channel:periodicTask", config.GlobalConfig.Store.RedisConfig.KeyPrefix)
 )
 
 type Instance struct {

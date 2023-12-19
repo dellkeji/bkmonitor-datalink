@@ -146,7 +146,7 @@ func RefreshInfluxdbRoute(ctx context.Context, t *t.Task) error {
 	}
 
 	// 更新version
-	consulInfluxdbVersionPath := fmt.Sprintf(models.InfluxdbInfoVersionConsulPathTemplate, config.StorageConsulPathPrefix)
+	consulInfluxdbVersionPath := fmt.Sprintf(models.InfluxdbInfoVersionConsulPathTemplate, config.GlobalConfig.Store.ConsulConfig.PathPrefix)
 	err = models.RefreshRouterVersion(ctx, consulInfluxdbVersionPath)
 	if err != nil {
 		logger.Errorf("refresh_influxdb_route refresh router version error, %v", err)

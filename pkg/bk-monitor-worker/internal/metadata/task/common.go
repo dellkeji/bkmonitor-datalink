@@ -10,16 +10,13 @@
 package task
 
 import (
-	"strconv"
-
 	"github.com/TencentBlueKing/bkmonitor-datalink/pkg/bk-monitor-worker/config"
 )
 
 func GetGoroutineLimit(taskName string) int {
-	limit, exist := config.GoroutineLimit[taskName]
-	if !exist {
-		return 10
+	limit, isExist := config.GlobalConfig.Task.Common.GoroutineLimit[taskName]
+	if !isExist {
+		limit = 10
 	}
-	res, _ := strconv.Atoi(limit)
-	return res
+	return limit
 }

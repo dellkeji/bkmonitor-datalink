@@ -102,40 +102,15 @@ var (
 	MetricReportDataId int
 	// MetricReportAccessToken indicator report access token
 	MetricReportAccessToken string
+	BrokerRedisMetricPublishKey string
 )
 
 func initApmVariables() {
-	NotifierChanBufferSize = GetValue("taskConfig.apmPreCalculate.notifier.chanBufferSize", 100000)
-
-	WindowMaxSize = GetValue("taskConfig.apmPreCalculate.window.maxSize", 100*100)
-	WindowExpireInterval = GetValue("taskConfig.apmPreCalculate.window.expireInterval", time.Minute, viper.GetDuration)
-	WindowMaxDuration = GetValue("taskConfig.apmPreCalculate.window.maxDuration", 5*time.Minute, viper.GetDuration)
-	WindowExpireIntervalIncrement = GetValue("taskConfig.apmPreCalculate.window.expireIntervalIncrement", 60)
-	WindowNoDataMaxDuration = GetValue("taskConfig.apmPreCalculate.window.noDataMaxDuration", 2*time.Minute, viper.GetDuration)
-
-	DistributiveWindowSubSize = GetValue("taskConfig.apmPreCalculate.window.distributive.subSize", 10)
-	DistributiveWindowWatchExpireInterval = GetValue("taskConfig.apmPreCalculate.window.distributive.watchExpireInterval", 100*time.Millisecond, viper.GetDuration)
-	DistributiveWindowConcurrentCount = GetValue("taskConfig.apmPreCalculate.window.distributive.concurrentCount", 1000)
-	DistributiveWindowConcurrentExpirationMaximum = GetValue("taskConfig.apmPreCalculate.window.distributive.concurrentExpirationMaximum", 100000)
-
-	EnabledTraceInfoCache = GetValue("taskConfig.apmPreCalculate.processor.enabledTraceInfoCache", 0)
-
-	StorageSaveRequestBufferSize = GetValue("taskConfig.apmPreCalculate.storage.saveRequestBufferSize", 100000)
-	StorageWorkerCount = GetValue("taskConfig.apmPreCalculate.storage.workerCount", 10)
-	StorageSaveHoldMaxCount = GetValue("taskConfig.apmPreCalculate.storage.saveHoldMaxCount", 1000)
-	StorageSaveHoldMaxDuration = GetValue("taskConfig.apmPreCalculate.storage.saveHoldMaxDuration", 500*time.Millisecond, viper.GetDuration)
-
-	StorageBloomFpRate = GetValue("taskConfig.apmPreCalculate.storage.bloom.fpRate", 0.01)
-	StorageBloomNormalAutoClean = GetValue("taskConfig.apmPreCalculate.storage.bloom.normal.autoClean", 24*time.Hour, viper.GetDuration)
-	StorageBloomNormalOverlapResetDuration = GetValue("taskConfig.apmPreCalculate.storage.bloom.normalOverlap.resetDuration", 2*time.Hour, viper.GetDuration)
-	StorageBloomLayersBloomLayers = GetValue("taskConfig.apmPreCalculate.storage.bloom.layersBloom.layers", 5)
-	StorageBloomDecreaseCap = GetValue("taskConfig.apmPreCalculate.storage.bloom.decreaseBloom.cap", 100000000)
-	StorageBloomDecreaseLayers = GetValue("taskConfig.apmPreCalculate.storage.bloom.decreaseBloom.layers", 10)
-	StorageBloomDecreaseDivisor = GetValue("taskConfig.apmPreCalculate.storage.bloom.decreaseBloom.divisor", 2)
 
 	/*
 	   Metric Config
 	*/
+	BrokerRedisMetricPublishKey = GetValue("broker.redis.metricPublishKey", "bmw_metric_publish")
 	MetricEnabled = GetValue("taskConfig.apmPreCalculate.metrics.timeSeries.enabled", false)
 	MetricReportHost = GetValue("taskConfig.apmPreCalculate.metrics.timeSeries.host", "")
 	MetricReportInterval = GetValue("taskConfig.apmPreCalculate.metrics.timeSeries.interval", time.Minute, viper.GetDuration)

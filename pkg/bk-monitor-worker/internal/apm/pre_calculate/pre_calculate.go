@@ -11,6 +11,7 @@ package pre_calculate
 
 import (
 	"context"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -24,31 +25,77 @@ import (
 func Initial(parentCtx context.Context) (PreCalculateProcessor, error) {
 	ctx, cancel := context.WithCancel(parentCtx)
 	redisConfig := config.GlobalConfig.Store.RedisConfig
+
+	// buffer size, default is 100000
+	bufferSize, isExist := config.GlobalConfig.Task.ApmPreCalculate.Notifier["chanBufferSize"]
+	if !isExist{
+		bufferSize = 100000
+	}
+
+	windowConfig := config.GlobalConfig.Task.ApmPreCalculate.Window
+	distributiveConfig :=windowConfig.Distributive
+
+	// process config
+	enabledTraceInfoCache, isExist := windowConfig.Processor["enabledTraceInfoCache"]
+	if !isExist{
+		enabledTraceInfoCache = 0
+	}
+	
+	storageConfig := windowConfig.Storage
+	autoClean, isExist:= storageConfig.Bloom.Normal["autoClean"]
+	if isExist{
+		autoClean = 24*time.Hour
+	}
+
+	overlapResetDuration, isExist := storageConfig.Bloom.NormalOverlap["resetDuration"]
+	if isExist{
+		overlapResetDuration = 2*time.Hour
+	}
+
+	bloomLayers, isExist := storageConfig.Bloom.LayersBloom["layers"]
+	if isExist{
+		bloomLayers = 5
+	}
+
+	cap, isExist := storageConfig.Bloom.DecreaseBloom["cap"]
+	if isExist{
+		cap = 100000000
+	}
+
+	decreaseLayers, isExist := storageConfig.Bloom.DecreaseBloom["layers"]
+	if isExist{
+		decreaseLayers = 10
+	}
+	divisor, isExist := storageConfig.Bloom.DecreaseBloom["divisor"]
+	if isExist{
+		divisor = 2
+	}
+
 	return NewPrecalculate().
 		WithContext(ctx, cancel).
 		WithNotifierConfig(
-			notifier.BufferSize(config.NotifierChanBufferSize),
+			notifier.BufferSize(bufferSize),
 		).
 		WithWindowRuntimeConfig(
-			window.RuntimeConfigMaxSize(config.WindowMaxSize),
-			window.RuntimeConfigExpireInterval(config.WindowExpireInterval),
-			window.RuntimeConfigMaxDuration(config.WindowMaxDuration),
-			window.ExpireIntervalIncrement(config.WindowExpireIntervalIncrement),
-			window.NoDataMaxDuration(config.WindowNoDataMaxDuration),
+			window.RuntimeConfigMaxSize(windowConfig.MaxSize),
+			window.RuntimeConfigExpireInterval(windowConfig.ExpireInterval),
+			window.RuntimeConfigMaxDuration(windowConfig.MaxDuration),
+			window.ExpireIntervalIncrement(windowConfig.ExpireIntervalIncrement),
+			window.NoDataMaxDuration(windowConfig.NoDataMaxDuration),
 		).
 		WithDistributiveWindowConfig(
-			window.DistributiveWindowSubSize(config.DistributiveWindowSubSize),
-			window.DistributiveWindowWatchExpiredInterval(config.DistributiveWindowWatchExpireInterval),
-			window.ConcurrentProcessCount(config.DistributiveWindowConcurrentCount),
-			window.ConcurrentExpirationMaximum(config.DistributiveWindowConcurrentExpirationMaximum),
+			window.DistributiveWindowSubSize(distributiveConfig.SubSize),
+			window.DistributiveWindowWatchExpiredInterval(distributiveConfig.WatchExpireInterval),
+			window.ConcurrentProcessCount(distributiveConfig.ConcurrentCount),
+			window.ConcurrentExpirationMaximum(distributiveConfig.ConcurrentExpirationMaximum),
 		).
 		WithProcessorConfig(
-			window.EnabledTraceInfoCache(config.EnabledTraceInfoCache != 0),
+			window.EnabledTraceInfoCache(enabledTraceInfoCache != 0),
 		).
 		WithStorageConfig(
-			storage.WorkerCount(config.StorageWorkerCount),
-			storage.SaveHoldMaxCount(config.StorageSaveHoldMaxCount),
-			storage.SaveHoldDuration(config.StorageSaveHoldMaxDuration),
+			storage.WorkerCount(storageConfig.WorkerCount),
+			storage.SaveHoldMaxCount(storageConfig.SaveHoldMaxCount),
+			storage.SaveHoldDuration(storageConfig.SaveHoldMaxDuration),
 			storage.CacheBackend(storage.CacheTypeRedis),
 			storage.CacheRedisConfig(
 				storage.RedisCacheMode(redisConfig.Mode),
@@ -63,21 +110,21 @@ func Initial(parentCtx context.Context) (PreCalculateProcessor, error) {
 				storage.RedisCacheReadTimeout(redisConfig.ReadTimeout),
 			),
 			storage.BloomConfig(
-				storage.BloomFpRate(config.StorageBloomFpRate),
+				storage.BloomFpRate(storageConfig.Bloom.FpRate),
 				storage.NormalMemoryBloomConfig(
-					storage.MemoryBloomAutoClean(config.StorageBloomNormalAutoClean),
+					storage.MemoryBloomAutoClean(autoClean),
 				),
 				storage.NormalOverlapMemoryBloomConfig(
-					storage.OverlapBloomResetDuration(config.StorageBloomNormalOverlapResetDuration),
+					storage.OverlapBloomResetDuration(overlapResetDuration),
 				),
-				storage.LayerBloomConfig(storage.Layers(config.StorageBloomLayersBloomLayers)),
+				storage.LayerBloomConfig(storage.Layers(bloomLayers)),
 				storage.LayerCapDecreaseBloomConfig(
-					storage.CapDecreaseBloomCap(config.StorageBloomDecreaseCap),
-					storage.CapDecreaseBloomLayers(config.StorageBloomDecreaseLayers),
-					storage.CapDecreaseBloomDivisor(config.StorageBloomDecreaseDivisor),
+					storage.CapDecreaseBloomCap(cap),
+					storage.CapDecreaseBloomLayers(decreaseLayers),
+					storage.CapDecreaseBloomDivisor(divisor),
 				),
 			),
-			storage.SaveReqBufferSize(config.StorageSaveRequestBufferSize),
+			storage.SaveReqBufferSize(storageConfig.SaveRequestBufferSize),
 		).
 		WithMetricReport(
 			EnabledMetricReport(config.MetricEnabled),

@@ -49,7 +49,7 @@ func NewHTTPService() *gin.Engine {
 // NewProfHttpService new a pprof service
 func NewProfHttpService() *gin.Engine {
 	svr := gin.Default()
-	gin.SetMode(config.GinMode)
+	gin.SetMode(config.GlobalConfig.Service.Mode)
 
 	pprof.Register(svr)
 

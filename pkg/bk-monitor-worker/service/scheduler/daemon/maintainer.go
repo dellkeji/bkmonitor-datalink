@@ -192,11 +192,13 @@ func NewDaemonTaskRunMaintainer(ctx context.Context, workerId string) *RunMainta
 		operatorMapping[taskKind] = op
 	}
 
+	daemonTaskConfig := config.GlobalConfig.Worker.DaemonTaskConfig.Maintainer
+
 	options := RunMaintainerOptions{
-		checkInterval:         config.WorkerDaemonTaskMaintainerInterval,
-		RetryTolerateCount:    config.WorkerDaemonTaskRetryTolerateCount,
-		RetryTolerateInterval: config.WorkerDaemonTaskRetryTolerateInterval,
-		RetryIntolerantFactor: config.WorkerDaemonTaskRetryIntolerantFactor,
+		checkInterval:         daemonTaskConfig.Interval,
+		RetryTolerateCount:    daemonTaskConfig.TolerateCount,
+		RetryTolerateInterval: daemonTaskConfig.TolerateInterval,
+		RetryIntolerantFactor: daemonTaskConfig.IntolerantFactor,
 	}
 
 	return &RunMaintainer{

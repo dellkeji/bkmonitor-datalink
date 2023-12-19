@@ -45,7 +45,7 @@ func NewTimeSeriesGroupSvc(obj *customreport.TimeSeriesGroup) TimeSeriesGroupSvc
 }
 
 func (s TimeSeriesGroupSvc) MetricConsulPath() string {
-	return fmt.Sprintf("%s/metadata/influxdb_metrics/%v/time_series_metric", cfg.StorageConsulPathPrefix, s.BkDataID)
+	return fmt.Sprintf("%s/metadata/influxdb_metrics/%v/time_series_metric", cfg.GlobalConfig.Store.ConsulConfig.PathPrefix, s.BkDataID)
 }
 
 func (s TimeSeriesGroupSvc) CreateCustomGroup(bkDataId uint, bkBizId int, customGroupName, label, operator string, isSplitMeasurement bool, defaultStorageConfig map[string]interface{}, additionalOptions map[string][]string) (*customreport.TimeSeriesGroup, error) {

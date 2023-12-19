@@ -26,321 +26,8 @@ var (
 	FilePath = "./bmw.yaml"
 	// EnvKeyPrefix env prefix
 	EnvKeyPrefix = "bmw"
-
-	// BrokerRedisMode redis mode
-	BrokerRedisMode string
-	// BrokerRedisSentinelMasterName broker redis mater name
-	BrokerRedisSentinelMasterName string
-	// BrokerRedisSentinelAddress redis address
-	BrokerRedisSentinelAddress []string
-	// BrokerRedisSentinelPassword password of broker redis
-	BrokerRedisSentinelPassword string
-	// BrokerRedisStandaloneHost host of standalone broker redis
-	BrokerRedisStandaloneHost string
-	// BrokerRedisStandalonePort port of standalone broker redis
-	BrokerRedisStandalonePort int
-	// BrokerRedisStandalonePassword password of standalone broker redis
-	BrokerRedisStandalonePassword string
-	// BrokerRedisDatabase db of broker redis
-	BrokerRedisDatabase int
-	// BrokerRedisDialTimeout broker redis dial timeout
-	BrokerRedisDialTimeout time.Duration
-	// BrokerRedisReadTimeout broker redis dial timeout
-	BrokerRedisReadTimeout time.Duration
-	// BrokerRedisMetricPublishKey key for metrics publish/subscribe
-	BrokerRedisMetricPublishKey string
-
-	// StorageRedisMode mode of storage redis
-	StorageRedisMode string
-	// StorageRedisSentinelMasterName master name of storage redis
-	StorageRedisSentinelMasterName string
-	// StorageRedisSentinelAddress address of storage redis
-	StorageRedisSentinelAddress []string
-	// StorageRedisSentinelPassword password of storage redis
-	StorageRedisSentinelPassword string
-	// StorageRedisStandaloneHost host of storage redis
-	StorageRedisStandaloneHost string
-	// StorageRedisStandalonePort port of storage redis
-	StorageRedisStandalonePort int
-	// StorageRedisStandalonePassword password of storage redis
-	StorageRedisStandalonePassword string
-	// StorageRedisDatabase db of storage redis
-	StorageRedisDatabase int
-	// StorageRedisDialTimeout storage redis dial timeout
-	StorageRedisDialTimeout time.Duration
-	// StorageRedisReadTimeout storage redis read timeout
-	StorageRedisReadTimeout time.Duration
-	// StorageRedisKeyPrefix storage prefix
-	StorageRedisKeyPrefix string
-
-	// StorageDependentRedisMode dependent redis mode
-	StorageDependentRedisMode string
-	// StorageDependentRedisSentinelMasterName dependent redis master name
-	StorageDependentRedisSentinelMasterName string
-	// StorageDependentRedisSentinelAddress dependent redis address
-	StorageDependentRedisSentinelAddress []string
-	//StorageDependentRedisSentinelPassword dependent redis password
-	StorageDependentRedisSentinelPassword string
-	// StorageDependentRedisStandaloneHost dependent redis host
-	StorageDependentRedisStandaloneHost string
-	// StorageDependentRedisStandalonePort dependent redis(standalone) port
-	StorageDependentRedisStandalonePort int
-	// StorageDependentRedisStandalonePassword dependent redis(standalone) password
-	StorageDependentRedisStandalonePassword string
-	// StorageDependentRedisDatabase dependent redis db
-	StorageDependentRedisDatabase int
-	// StorageDependentRedisDialTimeout dependent redis dial timeout
-	StorageDependentRedisDialTimeout time.Duration
-	// StorageDependentRedisReadTimeout dependent redis read timeout
-	StorageDependentRedisReadTimeout time.Duration
-
-	// StorageConsulPathPrefix prefix of consul
-	StorageConsulPathPrefix string
-	// StorageConsulSrvName consul server name
-	StorageConsulSrvName string
-	// StorageConsulAddress consul address
-	StorageConsulAddress string
-	// StorageConsulPort consul port
-	StorageConsulPort int
-	// StorageConsulAddr consul address
-	StorageConsulAddr string
-	// StorageConsulTag tag of consul
-	StorageConsulTag []string
-	// StorageConsulTll consul ttl
-	StorageConsulTll string
-
-	// StorageMysqlHost mysql host
-	StorageMysqlHost string
-	// StorageMysqlPort mysql port
-	StorageMysqlPort int
-	// StorageMysqlUser mysql user
-	StorageMysqlUser string
-	// StorageMysqlPassword mysql password
-	StorageMysqlPassword string
-	// StorageMysqlDbName mysql db
-	StorageMysqlDbName string
-	// StorageMysqlCharset mysql charset
-	StorageMysqlCharset string
-	// StorageMysqlMaxIdleConnections mysql max idle
-	StorageMysqlMaxIdleConnections int
-	// StorageMysqlMaxOpenConnections mysql max open size
-	StorageMysqlMaxOpenConnections int
-	// StorageMysqlDebug enabled mysql debug
-	StorageMysqlDebug bool
-
-	// StorageEsUpdateTaskRetainInvalidAlias whether retain invalid alias
-	StorageEsUpdateTaskRetainInvalidAlias bool
-
-	// StorageBboltDefaultPath bbolt default path
-	StorageBboltDefaultPath string
-	// StorageBboltDefaultBucketName bbolt default bucket name
-	StorageBboltDefaultBucketName string
-	// StorageBboltDefaultSync bbolt default sync
-	StorageBboltDefaultSync bool
-
-	// WorkerQueues worker listen queue(only valid in worker process)
-	WorkerQueues []string
-	// WorkerConcurrency concurrency of worker task
-	WorkerConcurrency int
-	// WorkerHealthCheckInterval interval of worker report health status
-	WorkerHealthCheckInterval time.Duration
-	// WorkerHealthCheckInfoDuration cache duration of worker info
-	WorkerHealthCheckInfoDuration time.Duration
-	// WorkerDaemonTaskMaintainerInterval check interval of task maintainer
-	WorkerDaemonTaskMaintainerInterval time.Duration
-	// WorkerDaemonTaskRetryTolerateCount max retry of task
-	WorkerDaemonTaskRetryTolerateCount int
-	// WorkerDaemonTaskRetryTolerateInterval retry interval of failed task
-	WorkerDaemonTaskRetryTolerateInterval time.Duration
-	// WorkerDaemonTaskRetryIntolerantFactor retry duration factor of failed task
-	WorkerDaemonTaskRetryIntolerantFactor int
-
-	// SchedulerTaskWatchChanSize Listen for the maximum number of concurrent tasks in the broker queue
-	SchedulerTaskWatchChanSize int
-	// SchedulerDaemonTaskNumeratorInterval interval of scheduler numerator
-	SchedulerDaemonTaskNumeratorInterval time.Duration
-	// SchedulerDaemonTaskWorkerWatcherInterval interval of scheduler worker watcher
-	SchedulerDaemonTaskWorkerWatcherInterval time.Duration
-	// SchedulerDaemonTaskTaskWatcherInterval interval of scheduler task watcher
-	SchedulerDaemonTaskTaskWatcherInterval time.Duration
-
-	// GinMode http mode
-	GinMode string
-	// TaskListenHost http listen host
-	TaskListenHost string
-	// TaskListenPort http listen port
-	TaskListenPort int
-	// ControllerListenHost http listen host
-	ControllerListenHost string
-	// TaskListenPort http listen port
-	ControllerListenPort int
-	// TaskListenHost http listen host
-	WorkerListenHost string
-	// TaskListenPort http listen port
-	WorkerListenPort int
-
-	// AesKey project aes key
-	AesKey string
-
-	// BkApiEnabled enabled bk-apigw
-	BkApiEnabled bool
-	// BkApiUrl bk-apigw host
-	BkApiUrl string
-	// BkApiStage bk-apigw stage
-	BkApiStage string
-	// BkApiAppCode bk-apigw app code
-	BkApiAppCode string
-	// BkApiAppSecret bk-apigw app secret
-	BkApiAppSecret string
-	// BkApiBcsApiGatewayDomain bk-apigw bcs domain
-	BkApiBcsApiGatewayDomain string
-	// BkApiBcsApiGatewayToken bk-apigw bcs token
-	BkApiBcsApiGatewayToken string
-
-	// GoroutineLimit max size of task goroutine
-	GoroutineLimit map[string]string
-
-	// TestStorageMysqlHost test-mysql host
-	TestStorageMysqlHost string
-	// TestStorageMysqlPort test-mysql port
-	TestStorageMysqlPort int
-	// TestStorageMysqlUser test-mysql user
-	TestStorageMysqlUser string
-	// TestStorageMysqlPassword test-mysql password
-	TestStorageMysqlPassword string
-	// TestStorageMysqlDbName test-mysql db name
-	TestStorageMysqlDbName string
 )
 
-func initVariables() {
-
-	/* Storage Redis 配置 */
-	StorageRedisMode = GetValue("store.redis.mode", "standalone")
-	StorageRedisSentinelMasterName = GetValue("store.redis.sentinel.masterName", "")
-	StorageRedisSentinelAddress = GetValue("store.redis.sentinel.address", []string{"127.0.0.1"})
-	StorageRedisSentinelPassword = GetValue("store.redis.sentinel.password", "")
-	StorageRedisStandaloneHost = GetValue("store.redis.standalone.host", "127.0.0.1")
-	StorageRedisStandalonePort = GetValue("store.redis.standalone.port", 6379)
-	StorageRedisStandalonePassword = GetValue("store.redis.standalone.password", "")
-	StorageRedisDatabase = GetValue("store.redis.db", 0)
-	StorageRedisDialTimeout = GetValue("store.redis.dialTimeout", 10*time.Second, viper.GetDuration)
-	StorageRedisReadTimeout = GetValue("store.redis.readTimeout", 10*time.Second, viper.GetDuration)
-	StorageRedisKeyPrefix = GetValue("store.redis.keyPrefix", "bmw")
-
-	/* Storage DependentRedis 配置 */
-	StorageDependentRedisMode = GetValue("store.dependentRedis.mode", "standalone")
-	StorageDependentRedisSentinelMasterName = GetValue("store.dependentRedis.sentinel.masterName", "")
-	StorageDependentRedisSentinelAddress = GetValue("store.dependentRedis.sentinel.address", []string{"127.0.0.1"})
-	StorageDependentRedisSentinelPassword = GetValue("store.dependentRedis.sentinel.password", "")
-	StorageDependentRedisStandaloneHost = GetValue("store.dependentRedis.standalone.host", "127.0.0.1")
-	StorageDependentRedisStandalonePort = GetValue("store.dependentRedis.standalone.port", 6379)
-	StorageDependentRedisStandalonePassword = GetValue("store.dependentRedis.standalone.password", "")
-	StorageDependentRedisDatabase = GetValue("store.dependentRedis.db", 0)
-	StorageDependentRedisDialTimeout = GetValue("store.dependentRedis.dialTimeout", 10*time.Second, viper.GetDuration)
-	StorageDependentRedisReadTimeout = GetValue("store.dependentRedis.readTimeout", 10*time.Second, viper.GetDuration)
-
-	/* Storage Consul配置 */
-	StorageConsulPathPrefix = GetValue("store.consul.pathPrefix", "bk_bkmonitorv3_enterprise_production")
-	StorageConsulSrvName = GetValue("store.consul.srvName", "bmw")
-	StorageConsulAddress = GetValue("store.consul.address", "127.0.0.1:8500")
-	StorageConsulPort = GetValue("store.consul.port", 8500)
-	StorageConsulAddr = GetValue("store.consul.addr", "http://127.0.0.1:8500")
-	StorageConsulTag = GetValue("store.consul.tag", []string{"bmw"})
-	StorageConsulTll = GetValue("store.consul.ttl", "")
-
-	/* Storage Mysql配置 */
-	StorageMysqlHost = GetValue("store.mysql.host", "127.0.0.1")
-	StorageMysqlPort = GetValue("store.mysql.port", 3306)
-	StorageMysqlUser = GetValue("store.mysql.user", "root")
-	StorageMysqlPassword = GetValue("store.mysql.password", "")
-	StorageMysqlDbName = GetValue("store.mysql.dbName", "")
-	StorageMysqlCharset = GetValue("store.mysql.charset", "utf8")
-	StorageMysqlMaxIdleConnections = GetValue("store.mysql.maxIdleConnections", 10)
-	StorageMysqlMaxOpenConnections = GetValue("store.mysql.maxOpenConnections", 100)
-	StorageMysqlDebug = GetValue("store.mysql.debug", false)
-
-	StorageEsUpdateTaskRetainInvalidAlias = GetValue("store.es.esRetainInvalidAlias", false)
-
-	StorageBboltDefaultPath = GetValue("store.bbolt.defaultPath", "bolt.db")
-	StorageBboltDefaultBucketName = GetValue("store.bbolt.defaultBuckName", "spaceBucket")
-	StorageBboltDefaultSync = GetValue("store.bbolt.defaultSync", false)
-
-	/*
-		Worker配置 ----- START
-	*/
-	// WorkerQueues worker进行监听的队列名称列表 在worker启动时可以通过--queues="x1,x2"指定 不指定默认使用default队列
-	WorkerQueues = GetValue("worker.queues", []string{"default"})
-	// WorkerConcurrency worker并发数量 0为使用CPU核数
-	WorkerConcurrency = GetValue("worker.concurrency", 0)
-	// WorkerHealthCheckInterval worker心跳上报时间间隔
-	WorkerHealthCheckInterval = GetValue("worker.healthCheck.interval", 3*time.Second, viper.GetDuration)
-	// WorkerHealthCheckInfoDuration worker心跳上报缓存过期时间
-	WorkerHealthCheckInfoDuration = GetValue("worker.healthCheck.duration", 5*time.Second, viper.GetDuration)
-	// WorkerDaemonTaskMaintainerInterval worker常驻任务检测任务是否正常运行的间隔
-	WorkerDaemonTaskMaintainerInterval = GetValue(
-		"worker.daemonTask.maintainer.interval", 1*time.Second, viper.GetDuration,
-	)
-	// WorkerDaemonTaskRetryTolerateCount worker常驻任务配置，当任务重试超过指定数量仍然失败时，下次重试间隔就不断动态增长
-	WorkerDaemonTaskRetryTolerateCount = GetValue("worker.daemonTask.maintainer.tolerateCount", 60)
-	// WorkerDaemonTaskRetryTolerateInterval worker常驻任务当任务执行失败并且重试次数未超过 WorkerDaemonTaskRetryTolerateCount 时
-	// 下次重试时间间隔
-	WorkerDaemonTaskRetryTolerateInterval = GetValue(
-		"worker.daemonTask.maintainer.tolerateInterval", 10*time.Second, viper.GetDuration,
-	)
-	// WorkerDaemonTaskRetryIntolerantFactor worker常驻任务当任务重试次数超过 WorkerDaemonTaskRetryTolerateCount 时
-	// 下次重试按照Nx倍数增长 设置倍数因子
-	WorkerDaemonTaskRetryIntolerantFactor = GetValue("worker.daemonTask.maintainer.intolerantFactor", 2)
-	/*
-		Worker配置 ----- END
-	*/
-
-	/*
-		Scheduler常驻任务配置 ----- START
-	*/
-	// SchedulerTaskWatchChanSize 调度器监听定时任务最大并发数量
-	SchedulerTaskWatchChanSize = GetValue("scheduler.watcher.chanSize", 10)
-	// SchedulerDaemonTaskNumeratorInterval 定时检测当前常驻任务分派是否正确的时间间隔(默认每60秒检测一次)
-	SchedulerDaemonTaskNumeratorInterval = GetValue(
-		"scheduler.daemonTask.numerator.interval", 60*time.Second, viper.GetDuration,
-	)
-	// SchedulerDaemonTaskWorkerWatcherInterval 常驻任务功能监听worker队列变化的间隔
-	SchedulerDaemonTaskWorkerWatcherInterval = GetValue(
-		"scheduler.daemonTask.watcher.workerWatchInterval", 1*time.Second, viper.GetDuration,
-	)
-	// SchedulerDaemonTaskTaskWatcherInterval 常驻任务功能监听task队列变化的间隔
-	SchedulerDaemonTaskTaskWatcherInterval = GetValue(
-		"scheduler.daemonTask.watcher.taskWatchInterval", 1*time.Second, viper.GetDuration,
-	)
-	/*
-		Scheduler常驻任务配置 ----- END
-	*/
-
-	GinMode = GetValue("service.mode", "release")
-	TaskListenHost = GetValue("service.task.listen", "127.0.0.1")
-	TaskListenPort = GetValue("service.task.port", 10211)
-	ControllerListenHost = GetValue("service.controller.listen", "127.0.0.1")
-	ControllerListenPort = GetValue("service.controller.port", 10212)
-	WorkerListenHost = GetValue("service.worker.listen", "127.0.0.1")
-	WorkerListenPort = GetValue("service.worker.port", 10213)
-
-	AesKey = GetValue("aes.key", "")
-
-	BkApiEnabled = GetValue("taskConfig.common.bkapi.enabled", false)
-	BkApiUrl = GetValue("taskConfig.common.bkapi.host", "http://127.0.0.1")
-	BkApiStage = GetValue("taskConfig.common.bkapi.stage", "stag")
-	BkApiAppCode = GetValue("taskConfig.common.bkapi.appCode", "appCode")
-	BkApiAppSecret = GetValue("taskConfig.common.bkapi.appSecret", "appSecret")
-	BkApiBcsApiGatewayDomain = GetValue("taskConfig.common.bkapi.bcsApiGatewayDomain", "")
-	BkApiBcsApiGatewayToken = GetValue("taskConfig.common.bkapi.bcsApiGatewayToken", "")
-
-	GoroutineLimit = GetValue("taskConfig.common.goroutineLimit", map[string]string{}, viper.GetStringMapString)
-
-	TestStorageMysqlHost = GetValue("test.store.mysql.host", "127.0.0.1")
-	TestStorageMysqlPort = GetValue("test.store.mysql.port", 3306)
-	TestStorageMysqlUser = GetValue("test.store.mysql.user", "root")
-	TestStorageMysqlPassword = GetValue("test.store.mysql.password", "")
-	TestStorageMysqlDbName = GetValue("test.store.mysql.dbName", "")
-}
 
 var (
 	keys []string
@@ -378,6 +65,7 @@ type StoreConfig struct {
 	MysqlConfig          MysqlStoreConfig          `mapstructure:"mysql"`
 	ConsulConfig         ConsulStoreConfig         `mapstructure:"consul"`
 	EsConfig             EsStoreConfig             `mapstructure:"es"`
+	Bolt				 BoltConfig `mapstructure:"bolt"`
 }
 
 // log config
@@ -392,13 +80,13 @@ type LogConfig struct {
 
 // aes config
 type AesConfig struct {
-	key string `mapstructure:"key"`
+	Key string `mapstructure:"key"`
 }
 
 // worker module config
 type WorkerModuleConfig struct {
-	Concurrency      int                     `mapstructure:"concurrency"`
-	Queues           []string                `mapstructure:"queues"`
+	Concurrency      int                     `mapstructure:"concurrency"`  // worker并发数量 0为使用CPU核数
+	Queues           []string                `mapstructure:"queues"`     // worker进行监听的队列名称列表 在worker启动时可以通过--queues="x1,x2"指定 不指定默认使用default队列
 	HealthCheck      WorkerHealthCheckConfig `mapstructure:"healthCheck"`
 	DaemonTaskConfig WorkerDaemonTaskConfig  `mapstructure:"daemonTask"`
 }
@@ -479,9 +167,9 @@ type SentinelRedisStoreConfig struct {
 
 type RedisDependentStoreConfig struct {
 	Mode        string                         `mapstructure:"mode"`
-	DB          string                         `mapstructure:"db"`
-	DialTimeout string                         `mapstructure:"dialTimeout"`
-	ReadTimeout string                         `mapstructure:"readTimeout"`
+	DB          int                         `mapstructure:"db"`
+	DialTimeout time.Duration                         `mapstructure:"dialTimeout"`
+	ReadTimeout time.Duration                         `mapstructure:"readTimeout"`
 	Standalone  StandaloneRedisDependentConfig `mapstructure:"standalone"`
 	Sentinel    SentinelRedisDependentConfig   `mapstructure:"sentinel"`
 }
@@ -529,6 +217,12 @@ type EsStoreConfig struct {
 	EsRetainInvalidAlias bool `mapstructure:"esRetainInvalidAlias"`
 }
 
+type BoltConfig struct {
+	Path string `mapstructure:"path"`
+	BucketName string `mapstructure:"bucketName"`
+	NoSync bool `mapstructure:"noSync"`
+}
+
 // Worker health check config
 type WorkerHealthCheckConfig struct {
 	Interval time.Duration `mapstructure:"interval"`
@@ -542,15 +236,15 @@ type WorkerDaemonTaskConfig struct {
 
 // daemontask config
 type DaemonTaskMaintainerConfig struct {
-	Interval         time.Duration `mapstructure:"interval"`
-	TolerateCount    int           `mapstructure:"tolerateCount"`
-	TolerateInterval time.Duration `mapstructure:"tolerateInterval"`
-	IntolerantFactor int           `mapstructure:"intolerantFactor"`
+	Interval         time.Duration `mapstructure:"interval"`        // worker常驻任务检测任务是否正常运行的间隔
+	TolerateCount    int           `mapstructure:"tolerateCount"`  // worker常驻任务配置，当任务重试超过指定数量仍然失败时，下次重试间隔就不断动态增长
+	TolerateInterval time.Duration `mapstructure:"tolerateInterval"`  // worker常驻任务当任务执行失败并且重试次数未超过 WorkerDaemonTaskRetryTolerateCount 时, 下次重试时间间隔
+	IntolerantFactor int           `mapstructure:"intolerantFactor"`  // worker常驻任务当任务重试次数超过 WorkerDaemonTaskRetryTolerateCount 时, 下次重试按照Nx倍数增长 设置倍数因子
 }
 
 // task module common config
 type TaskModuleCommonConfig struct {
-	GoroutineLimit map[string]int        `mapstructure:"goroutineLimit"`
+	GoroutineLimit map[string]int        `mapstructure:"goroutineLimit"`  // 
 	BkApi          TaskModuleBkApiConfig `mapstructure:"bkapi"`
 }
 
@@ -582,8 +276,11 @@ type TaskModuleMetadataMetricDimensionConfig struct {
 // task module bcs config
 type TaskModuleBcsConfig struct {
 	EnableBcsGray         bool   `mapstructure:"enableBcsGray"`
+	GrayClusterIdList []string `mapstructure:"grayClusterIdList"`
 	ClusterBkEnvLabel     string `mapstructure:"clusterBkEnvLabel"`
-	KafkaStorageClusterId int    `mapstructure:"kafkaStorageClusterId"`
+	KafkaStorageClusterId uint    `mapstructure:"kafkaStorageClusterId"`
+	InfluxdbDefaultProxyClusterNameForK8s string `mapstructure:"influxdbDefaultProxyClusterNameForK"`
+	CustomEventStorageClusterId uint `mapstructure:"customEventStorageClusterId"`
 }
 
 // apm pre calculate config
@@ -637,8 +334,8 @@ type SchedulerModuleConfig struct {
 
 // scheduler daemon task config
 type SchedulerModuleDaemonTaskConfig struct {
-	Numerator map[string]time.Duration `mapstructure:"numerator"`
-	Watcher   map[string]time.Duration `mapstructure:"watcher"`
+	Numerator map[string]time.Duration `mapstructure:"numerator"`  // 定时检测当前常驻任务分派是否正确的时间间隔(默认每60秒检测一次)
+	Watcher   map[string]time.Duration `mapstructure:"watcher"`  // 常驻任务功能监听worker|task 队列变化的间隔
 }
 
 // GetValue get value from config file
@@ -761,4 +458,6 @@ func InitConfig() {
 		logger.Fatalf("unmarshal config file: %s error: %s", FilePath, err)
 	}
 	GlobalConfig = &config
+
+	initApmVariables()
 }

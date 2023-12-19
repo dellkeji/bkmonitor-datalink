@@ -28,7 +28,7 @@ import (
 
 // QueueKeyPrefix returns a prefix for all keys in the given queue.
 func QueueKeyPrefix(qname string) string {
-	return fmt.Sprintf("{%s}:{%s}:", config.StorageRedisKeyPrefix, qname)
+	return fmt.Sprintf("{%s}:{%s}:", config.GlobalConfig.Store.RedisConfig.KeyPrefix, qname)
 }
 
 // TaskKeyPrefix returns a prefix for task key.

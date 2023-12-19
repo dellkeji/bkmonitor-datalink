@@ -33,7 +33,7 @@ func init() {
 	rootCmd.AddCommand(workerCmd)
 	addFlag("worker.queues", "queues", func() {
 		rootCmd.PersistentFlags().StringSliceVar(
-			&config.WorkerQueues, "queues", config.WorkerQueues, "Specify the queues that worker listens to.",
+			&config.GlobalConfig.Worker.Queues, "queues", config.GlobalConfig.Worker.Queues, "Specify the queues that worker listens to.",
 		)
 	})
 }
@@ -55,11 +55,12 @@ func startWorker(cmd *cobra.Command, args []string) {
 
 	r := bmwHttp.NewProfHttpService()
 
+	workerConfig := config.GlobalConfig.Service.Worker
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", config.WorkerListenHost, config.WorkerListenPort),
+		Addr:    fmt.Sprintf("%s:%d", workerConfig.Listen, workerConfig.Port),
 		Handler: r,
 	}
-	logger.Infof("Starting HTTP server at %s:%d", config.WorkerListenHost, config.WorkerListenPort)
+	logger.Infof("Starting HTTP server at %s:%d", workerConfig.Listen, workerConfig.Port)
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -69,7 +70,7 @@ func startWorker(cmd *cobra.Command, args []string) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	// 1. 启动worker服务
-	workerService, err := service.NewWorkerService(ctx, config.WorkerQueues)
+	workerService, err := service.NewWorkerService(ctx, config.GlobalConfig.Worker.Queues)
 	if err != nil {
 		logger.Fatalf(err.Error())
 	}

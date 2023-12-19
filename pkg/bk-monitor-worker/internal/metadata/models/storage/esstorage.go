@@ -1176,7 +1176,7 @@ func (e ESStorage) GroupExpiredAlias(alias elasticsearch.AliasResp, expiredDays 
 			datetimeStr := e.GetAliasDatetimeStr(aliasName)
 			if datetimeStr == "" {
 				// 匹配不上时间字符串的情况，一般是因为用户自行创建了别名
-				if config.StorageEsUpdateTaskRetainInvalidAlias {
+				if config.GlobalConfig.Store.EsConfig.EsRetainInvalidAlias {
 					// 保留不合法的别名，将该别名视为未过期
 					notExpiredAlias = append(notExpiredAlias, aliasName)
 					logger.Infof(

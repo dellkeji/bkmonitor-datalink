@@ -49,7 +49,7 @@ func (i InfluxdbTagInfo) GenerateTagKey() string {
 }
 
 func (InfluxdbTagInfo) ConsulPath() string {
-	return fmt.Sprintf(models.InfluxdbTagInfoConsulPathTemplate, config.StorageConsulPathPrefix)
+	return fmt.Sprintf(models.InfluxdbTagInfoConsulPathTemplate, config.GlobalConfig.Store.ConsulConfig.PathPrefix)
 }
 
 func (i InfluxdbTagInfo) RedisField() string {

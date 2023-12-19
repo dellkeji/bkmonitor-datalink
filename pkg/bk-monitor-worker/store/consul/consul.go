@@ -32,15 +32,16 @@ type Instance struct {
 var instance *Instance
 
 func NewInstance(ctx context.Context) (*Instance, error) {
+	consulConfig := config.GlobalConfig.Store.ConsulConfig
 	client, err := consulUtils.NewConsulInstance(
 		ctx,
 		consulUtils.InstanceOptions{
-			SrvName:    config.StorageConsulSrvName,
-			Addr:       config.StorageConsulAddress,
-			Port:       config.StorageConsulPort,
-			ConsulAddr: config.StorageConsulAddr,
-			Tags:       config.StorageConsulTag,
-			TTL:        config.StorageConsulTll,
+			SrvName:    consulConfig.SrvName,
+			Addr:       consulConfig.Address,
+			Port:       consulConfig.Port,
+			ConsulAddr: consulConfig.Addr,
+			Tags:       consulConfig.Tag,
+			TTL:        consulConfig.Ttl,
 		},
 	)
 	if err != nil {
@@ -49,7 +50,7 @@ func NewInstance(ctx context.Context) (*Instance, error) {
 	}
 	// new a kv client
 	conf := api.DefaultConfig()
-	conf.Address = config.StorageConsulAddress
+	conf.Address = consulConfig.Address
 	apiClient, err := api.NewClient(conf)
 	if err != nil {
 		logger.Errorf("new consul api client error, %v", err)

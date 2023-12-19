@@ -39,11 +39,12 @@ var instance *Instance
 
 // NewInstance create a new client instance
 func NewInstance(path string, bucketName string) (*Instance, error) {
+	boltConfig := config.GlobalConfig.Store.Bolt
 	if path == "" {
-		path = config.StorageBboltDefaultPath
+		path = boltConfig.Path
 	}
 	if bucketName == "" {
-		bucketName = config.StorageBboltDefaultBucketName
+		bucketName = boltConfig.BucketName
 	}
 
 	return &Instance{Path: path, BucketName: store.String2byte(bucketName)}, nil
@@ -101,7 +102,7 @@ func (c *Instance) Open() error {
 	// 提高数据库写入性能
 	c.DB.NoFreelistSync = true
 	// set db noSync
-	c.DB.NoSync = !config.StorageBboltDefaultSync
+	c.DB.NoSync = config.GlobalConfig.Store.Bolt.NoSync
 
 	return nil
 }

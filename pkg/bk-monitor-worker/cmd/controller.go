@@ -48,11 +48,13 @@ func startController(cmd *cobra.Command, args []string) {
 
 	r := bmwHttp.NewProfHttpService()
 
+	ctrConfig := config.GlobalConfig.Service.Controller
+
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", config.ControllerListenHost, config.ControllerListenPort),
+		Addr:    fmt.Sprintf("%s:%d", ctrConfig.Listen, ctrConfig.Port),
 		Handler: r,
 	}
-	logger.Infof("Starting HTTP server at %s:%d", config.ControllerListenHost, config.ControllerListenPort)
+	logger.Infof("Starting HTTP server at %s:%d", ctrConfig.Listen, ctrConfig.Port)
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

@@ -37,7 +37,12 @@ func (t *WatchService) StartWatch() {
 }
 
 func initConfig() WatchServiceOptions {
-	return WatchServiceOptions{watchChanSize: config.SchedulerTaskWatchChanSize}
+	// default chan size is 10
+	chanSize, isExist := config.GlobalConfig.Scheduler.Watcher["chanSize"]
+	if !isExist{
+		chanSize = 10
+	}
+	return WatchServiceOptions{watchChanSize: chanSize}
 }
 
 func NewWatchService(ctx context.Context) *WatchService {

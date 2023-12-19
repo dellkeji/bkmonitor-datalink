@@ -67,7 +67,7 @@ func (i InfluxdbHostInfo) GetConsulConfig() map[string]interface{} {
 
 // ConsulPath 获取host_info的consul根路径
 func (InfluxdbHostInfo) ConsulPath() string {
-	return fmt.Sprintf(models.InfluxdbHostInfoConsulPathTemplate, config.StorageConsulPathPrefix)
+	return fmt.Sprintf(models.InfluxdbHostInfoConsulPathTemplate, config.GlobalConfig.Store.ConsulConfig.PathPrefix)
 }
 
 // ConsulConfigPath 获取具体host的consul配置路径

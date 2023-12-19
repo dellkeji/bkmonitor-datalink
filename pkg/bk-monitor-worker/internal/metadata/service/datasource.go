@@ -159,7 +159,7 @@ func (d DataSourceSvc) makeToken() string {
 
 // ConsulPath 获取datasource的consul根路径
 func (DataSourceSvc) ConsulPath() string {
-	return fmt.Sprintf(models.DataSourceConsulPathTemplate, cfg.StorageConsulPathPrefix)
+	return fmt.Sprintf(models.DataSourceConsulPathTemplate, cfg.GlobalConfig.Store.ConsulConfig.PathPrefix)
 }
 
 // ConsulConfigPath 获取具体data_id的consul配置路径

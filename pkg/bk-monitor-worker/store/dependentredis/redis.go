@@ -28,19 +28,20 @@ type Instance struct {
 var instance *Instance
 
 func NewInstance(ctx context.Context) (*Instance, error) {
+	redisConfig := config.GlobalConfig.Store.DependentRedisConfig
 	client, err := redisUtils.NewRedisClient(
 		ctx,
 		&redisUtils.Option{
-			Mode:             config.StorageDependentRedisMode,
-			Host:             config.StorageDependentRedisStandaloneHost,
-			Port:             config.StorageDependentRedisStandalonePort,
-			SentinelAddress:  config.StorageDependentRedisSentinelAddress,
-			MasterName:       config.StorageDependentRedisSentinelMasterName,
-			SentinelPassword: config.StorageDependentRedisSentinelPassword,
-			Password:         config.StorageDependentRedisStandalonePassword,
-			Db:               config.StorageDependentRedisDatabase,
-			DialTimeout:      config.StorageDependentRedisDialTimeout,
-			ReadTimeout:      config.StorageDependentRedisReadTimeout,
+			Mode:             redisConfig.Mode,
+			Host:             redisConfig.Standalone.Host,
+			Port:             redisConfig.Standalone.Port,
+			SentinelAddress:  redisConfig.Sentinel.Address,
+			MasterName:       redisConfig.Sentinel.MasterName,
+			SentinelPassword: redisConfig.Sentinel.Password,
+			Password:         redisConfig.Sentinel.Password,
+			Db:               redisConfig.DB,
+			DialTimeout:      redisConfig.DialTimeout,
+			ReadTimeout:      redisConfig.ReadTimeout,
 		},
 	)
 	if err != nil {

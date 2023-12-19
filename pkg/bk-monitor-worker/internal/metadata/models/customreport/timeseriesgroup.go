@@ -107,16 +107,17 @@ func (ts *TimeSeriesGroup) UpdateMetricsFromRedis() error {
 
 // GetRedisData get data from redis
 func (ts *TimeSeriesGroup) GetRedisData() ([]map[string]interface{}, error) {
+	metadataMetricConfig := config.GlobalConfig.Task.Metadata.MetricDimension
 	// 获取要处理的指标和维度的标识
-	metricKey := fmt.Sprintf("%s%d", config.MetadataMetricDimensionMetricKeyPrefix, ts.BkDataID)
-	metricDimensionsKey := fmt.Sprintf("%s%d", config.MetadataMetricDimensionKeyPrefix, ts.BkDataID)
-	fetchStep := config.MetadataMetricDimensionMaxMetricFetchStep
+	metricKey := fmt.Sprintf("%s%d", metadataMetricConfig.MetricKeyPrefix, ts.BkDataID)
+	metricDimensionsKey := fmt.Sprintf("%s%d", metadataMetricConfig.MetricDimensionKeyPrefix, ts.BkDataID)
+	fetchStep := metadataMetricConfig.MaxMetricsFetchStep
 	// 转换时间
 	nowTime := time.Now()
 	nowTimeStampStr := fmt.Sprintf("%d", nowTime.Unix())
 	// NOTE: 使用ADD，参数为负值
 	validBeginTimeStamp := nowTime.Add(
-		-time.Duration(config.MetadataMetricDimensionTimeSeriesMetricExpiredDays) * time.Hour * 24,
+		-time.Duration(metadataMetricConfig.TimeSeriesMetricExpiredDays) * time.Hour * 24,
 	).Unix()
 	validBeginTimeStampStr := fmt.Sprintf("%d", validBeginTimeStamp)
 	ctx := context.Background()

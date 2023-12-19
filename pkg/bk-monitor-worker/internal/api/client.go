@@ -49,21 +49,22 @@ func GetGseApi() (*bkgse.Client, error) {
 		return gseApi, nil
 	}
 	var config define.ClientConfigProvider
-	useApiGateWay := cfg.BkApiEnabled
+	bkapiConfig := cfg.GlobalConfig.Task.Common.BkApi
+	useApiGateWay := bkapiConfig.Enabled
 	if useApiGateWay {
 		config = bkapi.ClientConfig{
-			BkApiUrlTmpl:  fmt.Sprintf("%s/api/{api_name}/", cfg.BkApiUrl),
-			Stage:         cfg.BkApiStage,
-			AppCode:       cfg.BkApiAppCode,
-			AppSecret:     cfg.BkApiAppSecret,
+			BkApiUrlTmpl:  fmt.Sprintf("%s/api/{api_name}/", bkapiConfig.Host),
+			Stage:         bkapiConfig.Stage,
+			AppCode:       bkapiConfig.AppCode,
+			AppSecret:     bkapiConfig.AppSecret,
 			JsonMarshaler: jsonx.Marshal,
 		}
 	} else {
 		config = bkapi.ClientConfig{
-			Endpoint:            fmt.Sprintf("%s/api/c/compapi/v2/gse/", cfg.BkApiUrl),
-			Stage:               cfg.BkApiStage,
-			AppCode:             cfg.BkApiAppCode,
-			AppSecret:           cfg.BkApiAppSecret,
+			Endpoint:            fmt.Sprintf("%s/api/c/compapi/v2/gse/", bkapiConfig.Host),
+			Stage:               bkapiConfig.Stage,
+			AppCode:             bkapiConfig.AppCode,
+			AppSecret:           bkapiConfig.AppSecret,
 			JsonMarshaler:       jsonx.Marshal,
 			AuthorizationParams: map[string]string{"bk_username": "admin"},
 		}
@@ -83,9 +84,10 @@ func GetBcsClusterManagerApi() (*bcsclustermanager.Client, error) {
 	if bcsClusterManager != nil {
 		return bcsClusterManager, nil
 	}
+	bkapiConfig := cfg.GlobalConfig.Task.Common.BkApi
 	config := bkapi.ClientConfig{
-		Endpoint:            fmt.Sprintf("%s/bcsapi/v4/clustermanager/v1/", strings.TrimRight(cfg.BkApiBcsApiGatewayDomain, "/")),
-		AuthorizationParams: map[string]string{"Authorization": fmt.Sprintf("Bearer %s", cfg.BkApiBcsApiGatewayToken)},
+		Endpoint:            fmt.Sprintf("%s/bcsapi/v4/clustermanager/v1/", strings.TrimRight(bkapiConfig.BcsApiGatewayDomain, "/")),
+		AuthorizationParams: map[string]string{"Authorization": fmt.Sprintf("Bearer %s", bkapiConfig.BcsApiGatewayToken)},
 		JsonMarshaler:       jsonx.Marshal,
 	}
 	var err error
@@ -103,11 +105,12 @@ func GetCmdbApi() (*cmdb.Client, error) {
 	if bcsClusterManager != nil {
 		return cmdbApi, nil
 	}
+	bkapiConfig := cfg.GlobalConfig.Task.Common.BkApi
 	config := bkapi.ClientConfig{
-		Endpoint:            fmt.Sprintf("%s/api/c/compapi/v2/cc/", cfg.BkApiUrl),
+		Endpoint:            fmt.Sprintf("%s/api/c/compapi/v2/cc/", bkapiConfig.Host),
 		AuthorizationParams: map[string]string{"bk_username": "admin", "bk_supplier_account": "0"},
-		AppCode:             cfg.BkApiAppCode,
-		AppSecret:           cfg.BkApiAppSecret,
+		AppCode:             bkapiConfig.AppCode,
+		AppSecret:           bkapiConfig.AppSecret,
 		JsonMarshaler:       jsonx.Marshal,
 	}
 
@@ -126,11 +129,12 @@ func GetNodemanApi() (*nodeman.Client, error) {
 	if nodemanApi != nil {
 		return nodemanApi, nil
 	}
+	bkapiConfig := cfg.GlobalConfig.Task.Common.BkApi
 	config := bkapi.ClientConfig{
-		Endpoint:            fmt.Sprintf("%s/api/c/compapi/v2/nodeman/", cfg.BkApiUrl),
+		Endpoint:            fmt.Sprintf("%s/api/c/compapi/v2/nodeman/", bkapiConfig.Host),
 		AuthorizationParams: map[string]string{"bk_username": "admin", "bk_supplier_account": "0"},
-		AppCode:             cfg.BkApiAppCode,
-		AppSecret:           cfg.BkApiAppSecret,
+		AppCode:             bkapiConfig.AppCode,
+		AppSecret:           bkapiConfig.AppSecret,
 		JsonMarshaler:       jsonx.Marshal,
 	}
 

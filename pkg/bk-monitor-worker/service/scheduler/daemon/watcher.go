@@ -200,10 +200,19 @@ func (d *DefaultWatcher) handleDeleteTask(taskMark watchTaskMark) {
 }
 
 func NewDefaultWatcher(ctx context.Context) Watcher {
+	daemonWatcher := config.GlobalConfig.Scheduler.DaemonTask.Watcher
+	taskWatcherInterval, isExist := daemonWatcher["taskWatchInterval"]
+	if !isExist {
+		taskWatcherInterval = 5 * time.Second
+	}
+	workerWatcherInterval, isExist := daemonWatcher["workerWatchInterval"]
+	if !isExist {
+		workerWatcherInterval = 5 * time.Second
+	}
 
 	options := DefaultWatcherOptions{
-		watchWorkerInterval: config.SchedulerDaemonTaskWorkerWatcherInterval,
-		watchTaskInterval:   config.SchedulerDaemonTaskTaskWatcherInterval,
+		watchWorkerInterval: workerWatcherInterval,
+		watchTaskInterval:   taskWatcherInterval,
 	}
 
 	return &DefaultWatcher{

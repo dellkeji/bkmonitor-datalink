@@ -47,11 +47,13 @@ func startTask(cmd *cobra.Command, args []string) {
 
 	r := bmwHttp.NewHTTPService()
 
+	taskConfig := config.GlobalConfig.Service.Task
+
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", config.TaskListenHost, config.TaskListenPort),
+		Addr:    fmt.Sprintf("%s:%d", taskConfig.Listen, taskConfig.Port),
 		Handler: r,
 	}
-	logger.Infof("Starting HTTP server at %s:%d", config.TaskListenHost, config.TaskListenPort)
+	logger.Infof("Starting HTTP server at %s:%d", taskConfig.Listen, taskConfig.Port)
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

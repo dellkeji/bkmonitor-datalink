@@ -57,7 +57,7 @@ func NewWorkerService(ctx context.Context, queues []string) (*WorkerService, err
 	// todo support more configurations
 
 	w, err := worker.NewWorker(worker.WorkerConfig{
-		Concurrency: config.WorkerConcurrency,
+		Concurrency: config.GlobalConfig.Worker.Concurrency,
 		BaseContext: func() context.Context { return ctx },
 	})
 
@@ -116,9 +116,11 @@ func (w *WorkerHealthMaintainer) Start() {
 
 func NewWorkerHealthMaintainer(ctx context.Context, queues []string) (*WorkerHealthMaintainer, error) {
 
+	healthCheckConfig := config.GlobalConfig.Worker.HealthCheck
+
 	options := MaintainerOptions{
-		checkInternal: config.WorkerHealthCheckInterval,
-		infoTtl:       config.WorkerHealthCheckInfoDuration,
+		checkInternal: healthCheckConfig.Interval,
+		infoTtl:       healthCheckConfig.Duration,
 	}
 
 	broker := rdb.GetRDB()

@@ -63,7 +63,7 @@ func (InfluxdbStorage) TableName() string {
 
 // ConsulPath 获取router的consul根路径
 func (InfluxdbStorage) ConsulPath() string {
-	return fmt.Sprintf(models.InfluxdbStorageConsulPathTemplate, cfg.StorageConsulPathPrefix)
+	return fmt.Sprintf(models.InfluxdbStorageConsulPathTemplate, cfg.GlobalConfig.Store.ConsulConfig.PathPrefix)
 }
 
 // ConsulConfigPath 获取具体结果表router的consul配置路径
@@ -198,7 +198,7 @@ func (i InfluxdbStorage) RefreshConsulClusterConfig(ctx context.Context, isPubli
 		return err
 	}
 	if isVersionRefresh {
-		if err := models.RefreshRouterVersion(ctx, fmt.Sprintf("%s/metadata/influxdb_info/version/", cfg.StorageConsulPathPrefix)); err != nil {
+		if err := models.RefreshRouterVersion(ctx, fmt.Sprintf("%s/metadata/influxdb_info/version/", cfg.GlobalConfig.Store.ConsulConfig.PathPrefix)); err != nil {
 			return err
 		}
 	}

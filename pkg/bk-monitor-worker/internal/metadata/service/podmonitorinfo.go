@@ -215,5 +215,5 @@ func (s PodMonitorInfoSvc) GetBkEnvLabel() (string, error) {
 	if cluster.BkEnv != nil && *cluster.BkEnv != "" {
 		return *cluster.BkEnv, nil
 	}
-	return cfg.BcsClusterBkEnvLabel, nil
+	return cfg.GlobalConfig.Task.Metadata.BcsConfig.ClusterBkEnvLabel, nil
 }
